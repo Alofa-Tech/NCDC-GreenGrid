@@ -172,16 +172,30 @@ The spatial query endpoint demonstrates the use of PostGIS for distance-based se
 
 ## 9. Setup and Execution
 
-1. **Database Setup.** Navigate to the `greengrid_db` folder and execute the following in order:
+Follow these steps to clone this repository to your local machine.
+
+1. **Copy the Repository URL.** Click the **Code** button on this repository page and copy the HTTPS or SSH URL.
+
+2. **Open Your Terminal.** Navigate to the folder where you want the project to be stored.
+
+3. **Run the Clone Command.**
+
+```cmd
+
+git clone https://github.com/Lisbon-GreenGrid/Lisbon-GreenGrid
+
+```
+
+4. **Database Setup.** Navigate to the `greengrid_db` folder and execute the following in order:
 - `00-create_db.sql` in pgAdmin
 - `create_db.py` in the default python environment (creates schemas, tables, indexes, and triggers)
 - `06-data.sql` in pgAdmin after the execution of the ETL package.
   
-2. **Environment Setup.** For both the ETL and API, install dependencies from either the `requirements.txt` or `environment.yml`. Follow the information available in their respective README section. Do not forget to input your database password in the `config/00.yml` file.
+5. **Environment Setup.** For both the ETL and API, install dependencies from either the `requirements.txt` or `environment.yml`. Follow the information available in their respective README section. Do not forget to input your database password in the `config/00.yml` file.
 
-4. **ETL Process.** Navigate to the `greengrid_etl` folder and run `main.py`.
+6. **ETL Process.** Navigate to the `greengrid_etl` folder and run `main.py`.
 
-6. **API Activation.** Navigate to the `api` folder and run `api.py`.
+7. **API Activation.** Navigate to the `api` folder and run `api.py`.
 
 8. **Webpage Launch.** Navigate to the `greengrid_web` folder and open `index.html` using a web browser.
 
