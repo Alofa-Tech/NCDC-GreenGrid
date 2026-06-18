@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Lisbon_GreenGrid</title>
+		<title>NCD GREEN CITY GRID</title>
 		<link rel="icon" type="image/x-icon" href="tree_logo.ico">
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<!-- Leaflet CSS to render map -->
 		<link type="text/css" rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />		
 		<link type="text/css" rel="stylesheet" href="style.css" />
@@ -29,7 +28,7 @@
 				<div class="logo-text">
 					<h1><img src="tree_logo.ico" alt="logo" class="logo"></h1>
 					<div class="text header-text">
-						<h1><span class="name">Lisbon GreenGrid</span></h1>
+						<h1><span class="name">NCD City Greed</span></h1>
 						<p class="justify-text">A smart urban forestry platform that centralizes tree inventory and maintenance data to support informed decision-making, public safety, and sustainable city management.</p>
 					</div>
 					<i class="bx bx-chevron-right toggle"></i>
@@ -49,11 +48,11 @@
 							</a>
 						</li>
 						<div class="sub-menu">
-							<label for="nameFilter" style="color: var(--text-color)">Nome Vulga:</label>
+							<label for="nameFilter" style="color: var(--text-color)">Type/Species:</label>
 							<input type="text" id="nameFilter" list="treeNamesList" placeholder="e.g. platano">
 							<datalist id="treeNamesList"></datalist>
 
-							<label for="fregFilter" style="color: var(--text-color)">Freguesia:</label>
+							<label for="fregFilter" style="color: var(--text-color)">Suburb:</label>
 							<input type="text" id="fregFilter" list="fregList" placeholder="e.g. Avenidas Novas">
 							<datalist id="fregList"></datalist>
 
@@ -113,24 +112,24 @@
 						<div class="sub-menu">
 							<label for="treeid" style="color: var(--text-color)">Tree ID:</label>
 							<input type="number" id="treeid" min="1" placeholder="e.g. 10">
-							<label for="name" style="color: var(--text-color)">Nome Vulga:</label>
+							<label for="name" style="color: var(--text-color)">Health</label>
 							<input type="text" id="name" min="" placeholder="e.g. platano">
-							<label for="especie" style="color: var(--text-color)">Especie:</label>
+							<label for="especie" style="color: var(--text-color)">Species:</label>
 							<input type="text" id="especie" min="" placeholder="e.g. Platanus sp.">
-							<label for="tipologia" style="color: var(--text-color)">Tipologia:</label>
+							<label for="tipologia" style="color: var(--text-color)">Type:</label>
 							<input type="text" id="tipologia" min="" placeholder="e.g. Caldeira">
 							<label for="local" style="color: var(--text-color)">Local:</label>
-							<input type="text" id="local" min="" placeholder="e.g. Campo Pequeno">
-							<label for="morada" style="color: var(--text-color)">Morada:</label>
-							<input type="text" id="morada" min="" placeholder="e.g. Campo Pequeno">
+							<input type="text" id="local" min="" placeholder="e.g.Landmark">
+							<label for="morada" style="color: var(--text-color)">Location:</label>
+							<input type="text" id="morada" min="" placeholder="e.g. Road Side">
 							<label for="pap" style="color: var(--text-color)">PAP:</label>
 							<input type="number" id="pap" min="0" placeholder="e.g. 15">
-							<label for="manutencao" style="color: var(--text-color)">Manutencao:</label>
+							<label for="manutencao" style="color: var(--text-color)">Maintenance:</label>
 							<input type="text" id="manutencao" min="" placeholder="e.g. JF">
-							<label for="ocupacao" style="color: var(--text-color)">Ocupacao:</label>
+							<label for="ocupacao" style="color: var(--text-color)">Occupancy:</label>
 							<input type="text" id="ocupacao" min="" placeholder="e.g. 50%">
-							<label for="freg" style="color: var(--text-color)">Freguesia:</label>
-							<input type="text" id="freg" min="" placeholder="e.g. Avenidas Novas">
+							<label for="freg" style="color: var(--text-color)">District:</label>
+							<input type="text" id="freg" min="" placeholder="e.g. North East">
 							<label for="lon" style="color: var(--text-color)">lon:</label>
 							<input type="number" id="lon" min="" placeholder="e.g. -9.586967">
 							<label for="lat" style="color: var(--text-color)">lat:</label>
@@ -151,24 +150,24 @@
 						<div class="sub-menu">
 							<label for="treeid" style="color: var(--text-color)">Tree ID:</label>
 							<input type="number" id="treeid" min="1" placeholder="e.g. 10">
-							<label for="name" style="color: var(--text-color)">Nome Vulga:</label>
-							<input type="text" id="name" min="" placeholder="e.g. platano">
-							<label for="especie" style="color: var(--text-color)">Especie:</label>
+							<label for="name" style="color: var(--text-color)">Common Name:</label>
+							<input type="text" id="name" min="" placeholder="e.g. plane tree">
+							<label for="especie" style="color: var(--text-color)">Species:</label>
 							<input type="text" id="especie" min="" placeholder="e.g. Platanus sp.">
-							<label for="tipologia" style="color: var(--text-color)">Tipologia:</label>
-							<input type="text" id="tipologia" min="" placeholder="e.g. Caldeira">
-							<label for="local" style="color: var(--text-color)">Local:</label>
-							<input type="text" id="local" min="" placeholder="e.g. Campo Pequeno">
-							<label for="morada" style="color: var(--text-color)">Morada:</label>
-							<input type="text" id="morada" min="" placeholder="e.g. Campo Pequeno">
-							<label for="pap" style="color: var(--text-color)">PAP:</label>
+							<label for="tipologia" style="color: var(--text-color)">Typology:</label>
+							<input type="text" id="tipologia" min="" placeholder="e.g. Tree Basin">
+							<label for="local" style="color: var(--text-color)">Site:</label>
+							<input type="text" id="local" placeholder="e.g. Campo Pequeno">
+							<label for="morada" style="color: var(--text-color)">Address:</label>
+							<input type="text" id="morada" placeholder="e.g. Campo Pequeno">
+							<label for="pap" style="color: var(--text-color)">Girth (DBH):</label>
 							<input type="number" id="pap" min="0" placeholder="e.g. 15">
-							<label for="manutencao" style="color: var(--text-color)">Manutencao:</label>
-							<input type="text" id="manutencao" min="" placeholder="e.g. JF">
-							<label for="ocupacao" style="color: var(--text-color)">Ocupacao:</label>
-							<input type="text" id="ocupacao" min="" placeholder="e.g. 50%">
-							<label for="freg" style="color: var(--text-color)">Freguesia:</label>
-							<input type="text" id="freg" min="" placeholder="e.g. Avenidas Novas">
+							<label for="manutencao" style="color: var(--text-color)">Maintenance:</label>
+							<input type="text" id="manutencao" placeholder="e.g. Parish Council">
+							<label for="ocupacao" style="color: var(--text-color)">Occupancy:</label>
+							<input type="text" id="ocupacao" placeholder="e.g. 50%">
+							<label for="freg" style="color: var(--text-color)">District:</label>
+							<input type="text" id="freg" placeholder="e.g. Nort West,South">
 							<button id="updateTreeButton" style="position: relative;">Update</button>
 						</div>
 					</div>
@@ -287,27 +286,27 @@
 								<div class="contactIcons">
 									<a href="https://github.com/adebolaadedayo" target="_blank"><i class="fab fa-github"></i></a>
 									<a href="https://www.linkedin.com/in/adebola-adedayo/" target="_blank"><i class="fab fa-linkedin"></i></a>
-									<a href="mailto:20250853@novaims.unl.pt"><i class="fas fa-envelope"></i></a>
+									<a href="mailto:ClaudeS@ncdc.gov.pg"><i class="fas fa-envelope"></i></a>
 								</div>
-								<a><span id="Adebola">Adebola David Adedayo</span></a>
+								<a><span id="Adebola">Claud Saliau</span></a>
 							
 							</li>
 							<li>
 								<div class="contactIcons">
 									<a href="https://github.com/OceeDiTT" target="_blank"><i class="fab fa-github"></i></a>
 									<a href="www.linkedin.com/in/oluomachristian" target="_blank"><i class="fab fa-linkedin"></i></a>
-									<a href="mailto:20250854@novaims.unl.pt"><i class="fas fa-envelope"></i></a>
+									<a href="mailto:GerrisonG@ncdc.gov.pg"><i class="fas fa-envelope"></i></a>
 								</div>
-								<a><span id="Chris">Christian Chibuike Oluoma</span></a>
+								<a><span id="Chris">Garrison G</span></a>
 								
 							</li>
 							<li>
 								<div class="contactIcons">
 									<a href="https://github.com/saba-fatima-eng" target="_blank"><i class="fab fa-github"></i></a>
 									<a href="https://www.linkedin.com/in/saba-fatima1101/" target="_blank"><i class="fab fa-linkedin"></i></a>
-									<a href="mailto:20250858@novaims.unl.pt"><i class="fas fa-envelope"></i></a>
+									<a href="mailto:duncangawi1@gmail.com"><i class="fas fa-envelope"></i></a>
 								</div>
-								<a><span>Saba Fatima</span></a>
+								<a><span>Developer-Duncan Gawi</span></a>
 							
 							</li>
 					</div>
@@ -348,7 +347,11 @@
 			</div>
 			<div id="commentContent"></div>
 		</div>
-
+            <!-- Copyright Footer Box -->
+                <div class="dev-copyright">
+                <p>&copy; 2026 National Capital District Commission.</p>
+            <p>Developed by <strong>Duncan Gawi</strong> for <strong>Alofa Techlabs</strong>.</p>
+        </div>
 		<!-- Leafletmap container -->
 		<div id="leaflet"></div>
 
