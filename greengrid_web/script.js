@@ -17,8 +17,8 @@ const darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/
 
 // Initialize the map
 var map = new L.Map('leaflet', {
-    center: [38.7448, -9.1607], // Lisbon coordinates
-    zoom: 12.5,
+    center: [-9.43865, 147.20563], // New map center from OpenStreetMap link
+    zoom: 13,
     layers: [osm] // Default base layer
 });
 
@@ -27,6 +27,10 @@ map.zoomControl.setPosition("bottomright");
 // --- 1.2. LAYER MANAGEMENT ---
 // Create the group for tree markers and add it to the map by default
 const treeLayer = L.layerGroup().addTo(map);
+
+// Expose treeLayer globally so other scripts can use it
+window.treeLayer = treeLayer;
+
 // Define the Base Maps
 const baseMaps = {
     "Standard": osm,
@@ -37,6 +41,93 @@ const baseMaps = {
 const AllTrees = {
     "Tree Inventory": treeLayer
 };
+
+// Dispatch event to signal map is initialized
+document.dispatchEvent(new Event('mapInitialized'));
+
+function getTreePopupHtml(tree) {
+    return `
+        <div style="font-family: sans-serif; min-width: 240px; max-width: 280px;">
+            <h4 style="margin:0; color:#2d5a27;">${tree.nome_vulga || `Tree #${tree.tree_id}`}</h4>
+            <hr>
+            <b>ID:</b> ${tree.tree_id}<br>
+            <b>Common Name:</b> ${tree.nome_vulga || 'N/A'}<br>
+            <b>Species:</b> <i>${tree.especie || 'N/A'}</i><br>
+            <b>Typology:</b> ${tree.tipologia || 'N/A'}<br>
+            <b>PAP:</b> ${tree.pap || 'N/A'}<br>
+            <b>Authority:</b> ${tree.manutencao || 'N/A'}<br>
+            <b>Occupation:</b> ${tree.ocupacao || 'N/A'}<br>
+            <b>Local:</b> ${tree.local || 'N/A'}<br>
+            <b>Address:</b> ${tree.morada || 'N/A'}<br>
+            <b>Freguesia:</b> ${tree.freguesia || 'N/A'}<br>
+            <div style="margin-top: 10px;">
+                <strong>Photos</strong>
+                <div id="tree-images-${tree.tree_id}" style="display:flex; flex-wrap:wrap; gap:6px; margin-top: 6px;">Loading images...</div>
+                <div style="margin-top:8px;">
+                    <input type="file" id="tree-image-input-${tree.tree_id}" accept="image/*" style="width:100%; margin-bottom:6px;">
+                    <button type="button" onclick="uploadTreeImage(${tree.tree_id})" style="width:100%; padding:8px 10px; border:none; border-radius:6px; background:#2d5a27; color:#fff; cursor:pointer;">Upload Tree Photo</button>
+                </div>
+            </div>
+        </div>`;
+}
+
+function fetchAndRenderTreeImages(treeId) {
+    const container = document.getElementById(`tree-images-${treeId}`);
+    if (!container) return;
+
+    container.innerHTML = '<span style="font-size:0.9em; color:#555;">Loading images…</span>';
+
+    fetch(`${API_BASE_URL}/tree/${treeId}/images`)
+        .then(res => res.json())
+        .then(images => {
+            if (!images || images.length === 0) {
+                container.innerHTML = '<span style="font-size:0.9em; color:#555;">No photos uploaded yet.</span>';
+                return;
+            }
+
+            container.innerHTML = images.map(img => `
+                <a href="${img.file_url}" target="_blank" style="display:inline-block; width:72px; height:72px; border-radius:8px; overflow:hidden; border:1px solid #ccc;">
+                    <img src="${img.file_url}" alt="${img.file_name}" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                </a>
+            `).join('');
+        })
+        .catch(err => {
+            console.error("Image fetch error:", err);
+            container.innerHTML = '<span style="font-size:0.9em; color:#a00;">Could not load images.</span>';
+        });
+}
+
+window.uploadTreeImage = async function(treeId) {
+    const fileInput = document.getElementById(`tree-image-input-${treeId}`);
+    if (!fileInput || !fileInput.files.length) {
+        alert('Please choose a photo to upload.');
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/tree/${treeId}/image`, {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Failed to upload tree image.');
+        }
+
+        alert(result.message || 'Photo uploaded successfully.');
+        fileInput.value = '';
+        fetchAndRenderTreeImages(treeId);
+    } catch (error) {
+        console.error('Upload error:', error);
+        alert(error.message || 'Could not upload image.');
+    }
+};
+
 // One single control for both base maps and overlays
 L.control.layers(baseMaps, AllTrees).addTo(map);
 
@@ -61,23 +152,8 @@ function loadAllTrees() {
                     fillOpacity: 0.9
                 });
 
-                marker.bindPopup(`
-                    <div style="font-family: sans-serif;">
-                        <h4 style="margin:0; color:#2d5a27;">${tree.nome_vulga}</h4>
-                        <hr>
-                        <b>ID:</b> ${tree.tree_id}<br>
-                        <b>Common Name:</b> ${tree.nome_vulga}<br>
-                        <b>Species:</b> <i>${tree.especie}</i><br>
-                        <b>Typology:</b> ${tree.tipologia}<br>
-                        <b>PAP:</b> ${tree.pap}<br>
-                        <b>Authority:</b> ${tree.manutencao}<br>
-                        <b>Occupation:</b> ${tree.ocupacao}<br>
-                        <b>Local:</b> ${tree.local}<br>
-                        <b>Address:</b> ${tree.morada}<br>
-                        <b>Freguesia:</b> ${tree.freguesia}
-                    </div>
-                `);
-
+                marker.bindPopup(getTreePopupHtml(tree));
+                marker.on('popupopen', () => fetchAndRenderTreeImages(tree.tree_id));
                 marker.addTo(treeLayer);
             });
         })
@@ -192,19 +268,8 @@ document.getElementById('filterBySpeciesORFraguesiaButton').onclick = function()
                     fillOpacity: 0.9
                 });
 
-                marker.bindPopup(`
-                    <b>ID:</b> ${tree.tree_id}<br>
-                    <b>Common Name:</b> ${tree.nome_vulga || 'N/A'}<br>
-                    <b>Species:</b> <i>${tree.especie || 'N/A'}</i><br>
-                    <b>Typology:</b> ${tree.tipologia || 'N/A'}<br>
-                    <b>PAP:</b> ${tree.pap || 'N/A'}<br>
-                    <b>Authority:</b> ${tree.manutencao || 'N/A'}<br>
-                    <b>Occupation:</b> ${tree.ocupacao || 'N/A'}<br>
-                    <b>Local:</b> ${tree.local || 'N/A'}<br>
-                    <b>Address:</b> ${tree.morada || 'N/A'}<br>
-                    <b>Freguesia:</b> ${tree.freguesia || 'N/A'}
-                `);
-
+                marker.bindPopup(getTreePopupHtml(tree));
+                marker.on('popupopen', () => fetchAndRenderTreeImages(tree.tree_id));
                 marker.addTo(treeLayer);
                 bounds.extend(latLng); // Add point to bounds
             });
@@ -257,21 +322,9 @@ document.getElementById('findTreeButton').onclick = function() {
                 duration: 1.5
             });
 
-            marker.bindPopup(`
-                <div style="font-family: sans-serif; min-width: 180px;">
-                    <h4 style="margin:0; color:#e74c3c;">Tree Found (ID: ${tree.tree_id})</h4>
-                    <hr>
-                    <b>Common Name:</b> ${tree.nome_vulga || 'N/A'}<br>
-                    <b>Species:</b> <i>${tree.especie || 'N/A'}</i><br>
-                    <b>Typology:</b> ${tree.tipologia || 'N/A'}<br>
-                    <b>PAP:</b> ${tree.pap || 'N/A'}<br>
-                    <b>Authority:</b> ${tree.manutencao || 'N/A'}<br>
-                    <b>Occupation:</b> ${tree.ocupacao || 'N/A'}<br>
-                    <b>Local:</b> ${tree.local || 'N/A'}<br>
-                    <b>Address:</b> ${tree.morada || 'N/A'}<br>
-                    <b>Freguesia:</b> ${tree.freguesia || 'N/A'}
-                </div>
-            `).openPopup();
+            marker.bindPopup(getTreePopupHtml(tree));
+            marker.on('popupopen', () => fetchAndRenderTreeImages(tree.tree_id));
+            marker.openPopup();
         })
         .catch(err => {
             console.error("Error finding tree:", err);
@@ -338,18 +391,8 @@ document.getElementById('nearTreeButton').onclick = function() {
                             fillOpacity: 1
                         }).addTo(treeLayer);
 
-                        marker.bindPopup(`
-                            <b>ID:</b> ${tree.tree_id}<br>
-                            <b>Common Name:</b> ${tree.nome_vulga || 'N/A'}<br>
-                            <b>Species:</b> <i>${tree.especie || 'N/A'}</i><br>
-                            <b>Typology:</b> ${tree.tipologia || 'N/A'}<br>
-                            <b>PAP:</b> ${tree.pap || 'N/A'}<br>
-                            <b>Authority:</b> ${tree.manutencao || 'N/A'}<br>
-                            <b>Occupation:</b> ${tree.ocupacao || 'N/A'}<br>
-                            <b>Local:</b> ${tree.local || 'N/A'}<br>
-                            <b>Address:</b> ${tree.morada || 'N/A'}<br>
-                            <b>Freguesia:</b> ${tree.freguesia || 'N/A'}
-                        `);
+                        marker.bindPopup(getTreePopupHtml(tree));
+                        marker.on('popupopen', () => fetchAndRenderTreeImages(tree.tree_id));
                         bounds.extend(treeCoords);
                     });
 
@@ -419,21 +462,9 @@ document.getElementById('createTreeButton').onclick = async function() {
                 fillOpacity: 1
             }).addTo(treeLayer);
 
-            marker.bindPopup(`
-                    <div style="font-family: sans-serif;">
-                    <h4 style="margin:0; color:#e67e22;">Created Tree #${payload.tree_id}</h4>
-                    <hr>
-                    <b>Name:</b> ${payload.nome_vulga}<br>
-                    <b>Common Name:</b> ${payload.nome_vulga || 'N/A'}<br>
-                    <b>Species:</b> <i>${payload.especie || 'N/A'}</i><br>
-                    <b>Typology:</b> ${payload.tipologia || 'N/A'}<br>
-                    <b>PAP:</b> ${payload.pap || 'N/A'}<br>
-                    <b>Authority:</b> ${payload.manutencao || 'N/A'}<br>
-                    <b>Occupation:</b> ${payload.ocupacao || 'N/A'}<br>
-                    <b>Local:</b> ${payload.local || 'N/A'}<br>
-                    <b>Address:</b> ${payload.morada || 'N/A'}<br>
-                    <b>Freguesia:</b> ${payload.freguesia || 'N/A'}
-                    </div>`).openPopup();
+            marker.bindPopup(getTreePopupHtml(payload));
+            marker.on('popupopen', () => fetchAndRenderTreeImages(payload.tree_id));
+            marker.openPopup();
             
             // 5. Center map on the new tree
             map.flyTo([payload.lat, payload.lon], 17);
@@ -507,21 +538,9 @@ document.getElementById('updateTreeButton').onclick = async function() {
                 }).addTo(treeLayer);
 
                 // 4. Update Popup
-                updatedMarker.bindPopup(`
-                    <div style="font-family: sans-serif;">
-                        <h4 style="margin:0; color:#e67e22;">Updated Tree #${treeId}</h4>
-                        <hr>
-                        <b>Common Name:</b> ${payload.nome_vulga || 'N/A'}<br>
-                        <b>Species:</b> <i>${payload.especie || 'N/A'}</i><br>
-                        <b>Typology:</b> ${payload.tipologia || 'N/A'}<br>
-                        <b>PAP:</b> ${payload.pap || 'N/A'}<br>
-                        <b>Authority:</b> ${payload.manutencao || 'N/A'}<br>
-                        <b>Occupation:</b> ${payload.ocupacao || 'N/A'}<br>
-                        <b>Local:</b> ${payload.local || 'N/A'}<br>
-                        <b>Address:</b> ${payload.morada || 'N/A'}<br>
-                        <b>Freguesia:</b> ${payload.freguesia || 'N/A'}
-                    </div>
-                `).openPopup();
+                updatedMarker.bindPopup(getTreePopupHtml(tree));
+                updatedMarker.on('popupopen', () => fetchAndRenderTreeImages(tree.tree_id));
+                updatedMarker.openPopup();
 
                 map.flyTo([lat, lon], 18);
             } else {

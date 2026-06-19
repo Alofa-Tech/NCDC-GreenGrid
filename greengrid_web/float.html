@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tree Count Widget</title>
+  <link rel="stylesheet" href="styles1.css">
+</head>
+<body>
+  <main>
+    <section id="tree-list">
+      <h2>Trees</h2>
+      <!-- Example tree items with Tree ID and suburb data-treeid and data-suburb -->
+      <div class="tree-item" data-treeid="1" data-suburb="Moresby South">Tree 1 — Moresby South</div>
+      <div class="tree-item" data-treeid="2" data-suburb="North West">Tree 2 — North West</div>
+      <div class="tree-item" data-treeid="3" data-suburb="North East">Tree 3 — North East</div>
+      <div class="tree-item" data-treeid="4" data-suburb="North East">Tree 4 — North East</div>
+      <div class="tree-item" data-treeid="5" data-suburb="Moresby South">Tree 5 — Moresby South</div>
+    </section>
+  </main>
+
+  <!-- Floating widget mount point (script will populate) -->
+  <div id="tree-count-widget-root"></div>
+
+  <script src="widget.js" defer></script>
+</body>
+</html>

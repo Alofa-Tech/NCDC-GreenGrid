@@ -1,0 +1,4 @@
+// Placeholder UI stats module — integrate with your data source// Use fetchTreeStats() to return { total: number, canopy_pct: number, avg_health: number }// Replace fetchTreeStats with your API call (e.g., fetch('/api/trees/stats'))
+async function fetchTreeStats(){  // temporary simulated data  return new Promise(resolve=>{    setTimeout(()=> resolve({      total: 12847,      canopy_pct: 27.3,      avg_health: 78    }), 300);  });}
+async function updateTopStats(){  try{    const s = await fetchTreeStats();    document.getElementById('statTotal').textContent = s.total.toLocaleString();    document.getElementById('statCanopy').textContent = `${s.canopy_pct.toFixed(1)}%`;    document.getElementById('statHealth').textContent = `${s.avg_health}%`;  }catch(e){    console.error('Stats update failed', e);  }}
+// initial update and periodic refreshupdateTopStats();setInterval(updateTopStats, 60_000); // refresh every minute   

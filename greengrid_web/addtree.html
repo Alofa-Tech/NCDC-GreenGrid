@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber-Arbor Asset Dashboard</title>
+    <!-- Leaflet Mapping Infrastructure CSS -->
+    <link rel="stylesheet" href="https://unpkg.com" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --panel-bg: rgba(22, 27, 34, 0.8);
+            --border-color: rgba(0, 242, 254, 0.25);
+            --text-color: #c9d1d9;
+            --text-heading: #ffffff;
+            --accent-neon: #00f2fe;
+            --accent-glow: rgba(0, 242, 254, 0.35);
+            --error-color: #ff3131;
+            --error-glow: rgba(255, 49, 49, 0.4);
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            
+            /* Condition Severity Tiers */
+            --neon-green: #39ff14;
+            --neon-yellow: #fff01f;
+            --neon-red: #ff3131;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 24px;
+            box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 242, 254, 0.03) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.06) 0px, transparent 50%);
+        }
+
+        /* Interface Container Core Layout */
+        .dashboard-container {
+            display: flex;
+            gap: 24px;
+            width: 100%;
+            max-width: 1200px;
+            align-items: stretch;
+        }
+
+        /* Symmetric Side-by-Side Visual Framework */
+        .cyber-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px;
+            flex: 1.1;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-panel {
+            flex: 0.9;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            min-height: 600px;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            background: #090a0f;
+        }
+
+        /* Cyberpunk Top Accent Line Indicators */
+        .cyber-panel::before, .map-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-neon), transparent);
+            z-index: 1000;
+        }
+
+        .panel-title {
+            font-size: 1.15rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+            color: var(--text-heading);
+            text-shadow: 0 0 12px var(--accent-glow);
+            text-align: center;
+            font-weight: 700;
+        }
+
+        /* Highly Legible Input Grid Framework */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            color: var(--text-color);
+            opacity: 0.85;
+            font-weight: 600;
+        }
+
+        input {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            padding: 10px 14px;
+            color: var(--text-heading);
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus {
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 8px var(--accent-glow);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* Invalid Validation Warning Style Anchor */
+        .input-group.invalid input {
+            border-color: var(--error-color);
+            box-shadow: 0 0 8px var(--error-glow);
+            background: rgba(255, 49, 49, 0.02);
+        }
+
+        .validation-error-msg {
+            color: var(--error-color);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .input-group.invalid .validation-error-msg {
+            display: block;
+        }
+
+        /* Dynamic Reactive Dropdown Elements */
+        .dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.25s ease;
+            color: var(--text-heading);
+        }
+
+        .dropdown-wrapper.active .dropdown-trigger {
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            width: 100%;
+            background: #151922;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            z-index: 1010;
+            display: none;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            padding: 4px 0;
+        }
+
+        .dropdown-wrapper.active .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 242, 254, 0.08);
+            color: var(--accent-neon);
+        }
+
+        /* Recursive Floating Dropdown Submenus */
+        .submenu {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            width: 100%;
+            background: #1a1f2c;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            display: none;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            padding: 4px 0;
+        }
+
+        .dropdown-item.has-submenu {
+            position: relative;
+        }
+
+        .dropdown-item.has-submenu::after {
+            content: '▶';
+            font-size: 0.55rem;
+            opacity: 0.6;
+        }
+
+        .dropdown-item.has-submenu:hover .submenu {
+            display: block;
+        }
+
+        .submenu-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+
+        .submenu-item:hover {
+            background: var(--accent-neon);
+            color: #0b0c10;
+            font-weight: 600;
+        }
+
+        /* Status Layout Context */
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .neon-status-icon {
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+
+        .status-optimal { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
+        .status-warning { color: var(--neon-yellow); text-shadow: 0 0 8px var(--neon-yellow); }
+        .status-critical { color: var(--neon-red); text-shadow: 0 0 8px var(--neon-red); }
+
+        /* Action Cluster Systems */
+        .button-cluster {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 18px;
+            grid-column: span 2;
+        }
+
+        .cyber-btn {
+            background: transparent;
+            border: 1px solid var(--accent-neon);
+            color: var(--accent-neon);
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.8rem;
+            transition: all 0.25s ease;
+        }
+
+        .cyber-btn:hover {
+            background: var(--accent-neon);
+            color: #0b0c10;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .export-btn {
+            border-color: #a855f7;
+            color: #a855f7;
+        }
+
+        .export-btn:hover {
+            background: #a855f7;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+        }
+
+        /* Custom Geometric SVG Node Graphics */
+        .cyber-marker {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .marker-glow {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 8px rgba(255,255,255,0.8);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }               
+        

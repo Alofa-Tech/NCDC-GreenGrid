@@ -1,0 +1,95 @@
+:root{
+  --bg: #f6f8fa;
+  --panel: #ffffff;
+  --text-color: #222;
+  --accent: #2b8aef;
+  --muted: #666;
+}
+
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text-color);
+  padding:20px;
+}
+
+main{display:flex;gap:20px;align-items:flex-start}
+
+aside{width:320px;background:var(--panel);padding:16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+
+.sub-menu label{display:block;margin-top:10px;font-size:13px;color:var(--muted)}
+.sub-menu input,
+.sub-menu select,
+.sub-menu button{
+  width:100%;
+  padding:8px 10px;
+  margin-top:6px;
+  border:1px solid #ddd;border-radius:6px;
+  font-size:14px;
+}
+
+.sub-menu input[readonly]{background:#f2f4f6;color:var(--text-color);}
+
+#tree-list{flex:1;background:var(--panel);padding:16px;border-radius:8px}
+.tree-item{padding:8px 10px;border-radius:6px;background:#eef6ff;margin:6px 0;border:1px solid rgba(43,138,239,0.12)}
+
+:root{
+  --widget-bg: #0b1826;
+  --widget-panel: #0f2a44;
+  --accent: #2bb7ff;
+  --text: #ffffff;
+  --muted: #cfe9ff;
+  --glass: rgba(255,255,255,0.04);
+}
+
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+
+body{margin:0;background:#f6f8fa;color:#222;padding:20px}
+
+#tree-list{max-width:900px;margin:0 auto;padding:16px;background:#fff;border-radius:8px;box-shadow:0 4px 18px rgba(2,8,23,0.06)}
+.tree-item{padding:8px 12px;border-radius:6px;background:#eef6ff;margin:8px 0;border:1px solid rgba(43,138,239,0.12)}
+
+/* Floating widget styles */
+#tree-count-widget {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 300px;
+  max-width: calc(100% - 36px);
+  background: linear-gradient(180deg,var(--widget-panel),var(--widget-bg));
+  color: var(--text);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(2,8,23,0.28);
+  padding: 12px;
+  z-index: 10000;
+  backdrop-filter: blur(6px);
+  transition: transform .18s ease, opacity .18s ease;
+}
+
+/* Collapsed state */
+#tree-count-widget.collapsed { width: 56px; height: 56px; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+#widget-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#widget-title{font-weight:600;font-size:14px}
+#widget-toggle{background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:18px;padding:4px}
+
+/* Counts list */
+#widget-body{margin-top:10px}
+.suburb-row{display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;background:var(--glass);margin-bottom:8px}
+.suburb-name{font-size:13px;color:var(--muted)}
+.suburb-count{font-weight:700;color:var(--accent)}
+
+#widget-footer{display:flex;gap:8px;margin-top:8px}
+.widget-btn{flex:1;padding:8px;border-radius:8px;border:0;background:rgba(255,255,255,0.06);color:var(--text);cursor:pointer;font-size:13px}
+
+/* Responsive smaller screens */
+@media (max-width:420px){
+  #tree-count-widget{right:12px;bottom:12px;width:260px}
+  #widget-title{font-size:13px}
+}
+
+/* Tiny collapsed icon styling */
+#widget-icon{width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#032033;font-weight:700}
+

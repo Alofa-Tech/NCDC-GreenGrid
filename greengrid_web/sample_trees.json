@@ -1,0 +1,30 @@
+[
+  {
+    "tree_id": 1001,
+    "nome_vulga": "Oak",
+    "especie": "Quercus robur",
+    "tipologia": "Tree",
+    "local": "Park A",
+    "morada": "Street 1",
+    "pap": 25.5,
+    "manutencao": "City Hall",
+    "ocupacao": "50%",
+    "freguesia": "Central",
+    "lat": 38.7448,
+    "lon": -9.1607
+  },
+  {
+    "tree_id": 1002,
+    "nome_vulga": "Elm",
+    "especie": "Ulmus europaeus",
+    "tipologia": "Tree",
+    "local": "Park B",
+    "morada": "Street 2",
+    "pap": 15.0,
+    "manutencao": "Parks Dept",
+    "ocupacao": "30%",
+    "freguesia": "North",
+    "lat": 38.7550,
+    "lon": -9.1500
+  }
+]

@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>NCD GREEN CITY GRID</title>
-		<link rel="icon" type="image/x-icon" href="tree_logo.ico">
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<!-- Leaflet CSS to render map -->
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NCD GREEN CITY GRID</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="tree_logo.ico">
+    <!-- Third-Party Structural Map and Icon Libraries -->
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com" />		
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com" />
+    <link type="text/css" rel="stylesheet" href="https://cloudflare.com" />
+    <!-- Leaflet CSS to render map -->
 		<link type="text/css" rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />		
 		<link type="text/css" rel="stylesheet" href="style.css" />
 		
@@ -17,9 +23,9 @@
 		<link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 		<title>Dashboard Sidebar Menu | Dark-Light Mode</title>
-	</head>
 	
-	<body>
+</head>
+<<body>
 		<!-- Sidebar navigation -->
 		<nav id = "sidebar" class = "sidebar">
 			<header>
@@ -355,8 +361,20 @@
 		<!-- Leafletmap container -->
 		<div id="leaflet"></div>
 
+		<!-- Tree List Section -->
+		<section id="tree-list">
+			<h2>Trees</h2>
+			<!-- Tree items will be populated dynamically by trees-loader.js -->
+		</section>
+
+		<!-- Floating widget mount point (script will populate) -->
+		<div id="tree-count-widget-root"></div>
+
 		<!-- Javascript files -->
 		<script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
 		<script src="script.js"></script>
+		<script src="trees-loader.js"></script>
+		<script src="widget.js" defer></script>
 	</body>
 </html>
+
